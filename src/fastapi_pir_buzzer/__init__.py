@@ -15,8 +15,8 @@ data = {
 }
 
 #Initialise the hardware
-pir = MotionSensor(23)
-buzzer = PWMOutputDevice(24, frequency=500)
+pir = None
+buzzer = None
 
 async def beep(repeat:int):
     """
@@ -53,6 +53,10 @@ async def motion_detection():
 async def lifespan(app: FastAPI):
     """ Lifespan context manager replace standard threading
     It starts the background task when the server boots and cleans it up on exit"""
+    global pir, buzzer
+    pir = MotionSensor(23)
+    buzzer = PWMOutputDevice(24, frequency=500)
+
     task = asyncio.create_task(motion_detection())
     yield
     task.cancel()

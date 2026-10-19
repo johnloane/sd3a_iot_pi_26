@@ -19,13 +19,11 @@ function checkConnectionTimeout(connectionBadge, motionBadge){
 
 	if(currentTime - aliveTimestamp > heartBeatRate + 1000)
 	{
-		console.log("Connection timed out - should show Offline");
 		updateBadge(connectionBadge, "Offline", "bg-danger", "bg-success");
 		updateBadge(motionBadge, "Unknown", "bg-secondary", "bg-primary", "bg-success", "bg-danger");
 	}
 	else
 	{
-		console.log("Connection ok - Online");
 		updateBadge(connectionBadge, "Online", "bg-success", "bg-danger", "bg-secondary");
 	}
 	setTimeout(() => checkConnectionTimeout(connectionBadge, motionBadge), heartBeatRate);
@@ -40,7 +38,7 @@ function pollServer(motionBadge)
 			return response.json();
 		})
 		.then(data =>{
-			if(data.motion == 1)
+			if(data.motion === 1)
 			{
 				updateBadge(motionBadge, "Motion Detected", "bg-danger", "bg-success", "bg-secondary");
 			}
@@ -67,9 +65,10 @@ function sendEvent(value)
 
 function updateBadge(element, text, classToAdd, ...classesToRemove)
 {
-	if(element.textContext !== text)
+	console.log(`Trying to change text to: ${text}`);
+	if(element.innerText !== text)
 	{
-		element.textContext = text;
+		element.innerText = text;
 	}
 	classesToRemove.forEach(cls => element.classList.remove(cls));
 	element.classList.add(classToAdd);
